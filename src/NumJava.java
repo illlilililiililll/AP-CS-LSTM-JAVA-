@@ -355,6 +355,25 @@ public class NumJava {
         return arr;
     }
 
+    public static double[][] sum(double[][] A, int axis) {
+        double[][] arr = new double[A.length][A[0].length];
+        if (axis == 0) {
+            arr = new double[1][A[0].length];
+
+            for (double[] doubles : A)
+                for (int j = 0; j < A[0].length; j++)
+                    arr[0][j] += doubles[j];
+        }
+        else if (axis == 1) {
+            arr = new double[A.length][1];
+            for (int i = 0; i < A.length; i++)
+                for (int j = 0; j < A[0].length; j++)
+                    arr[i][0] += A[i][j];
+        }
+
+        return arr;
+    }
+
     public static double[][] transpose(double[][] A) {
         double[][] arr = new double[A[0].length][A.length];
 
@@ -391,10 +410,12 @@ public class NumJava {
     }
 
     public static double crossEntropyLoss(double[][] pred, double[][] real) {
+        print(shape(pred));
+        print(shape(real));
         double loss = 0.0;
         for (int i = 0; i < real.length; i++)
             for (int j = 0; j < real[0].length; j++)
-                loss -= real[i][j] * Math.log(pred[i][j] + 1e-9);
+                loss -= real[i][j] * Math.log(pred[i][j] + 1e-8);
 
         return loss;
     }

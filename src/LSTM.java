@@ -2,9 +2,6 @@ public class LSTM {
     protected double[][] Wf, Wi, WC, Wo;
     protected double[][] bf, bi, bC, bo;
 
-    protected double[][] dWf, dWi, dWC, dWo;
-    protected double[][] dbf, dbi, dbC, dbo;
-
     private Adam adam;
 
     public LSTM(int input, int hidden) {
@@ -35,7 +32,7 @@ public class LSTM {
 
         double[][] h_t = NumJava.times(o_t, NumJava.tanh(C_t));
 
-        return new double[][][] { h_t, C_t };
+        return new double[][][] { f_t, i_t, C_tilda, o_t, C_t, h_t };
     }
 
     double[][][] backward(
@@ -68,15 +65,15 @@ public class LSTM {
         double[][] concat = NumJava.vstack(h_prev, x);
 
         double[][] T = NumJava.transpose(concat);
-        this.dWf = NumJava.dot(df_t, T);
-        this.dWi = NumJava.dot(di_t, T);
-        this.dWC = NumJava.dot(dC_tilda, T);
-        this.dWo = NumJava.dot(do_t, T);
+        double[][] dWf = NumJava.dot(df_t, T);
+        double[][] dWi = NumJava.dot(di_t, T);
+        double[][] dWC = NumJava.dot(dC_tilda, T);
+        double[][] dWo = NumJava.dot(do_t, T);
 
-        this.dbf = df_t;
-        this.dbi = di_t;
-        this.dbC = dC_tilda;
-        this.dbo = do_t;
+        double[][] dbf = NumJava.sum(df_t, 1);
+        double[][] dbi = NumJava.sum(di_t, 1);
+        double[][] dbC = NumJava.sum(dC_tilda, 1);
+        double[][] dbo = NumJava.sum(do_t, 1);
 
         double[][] dh_prev = NumJava.dot(NumJava.transpose(Wf), df_t);
         dh_prev = NumJava.add(dh_prev, NumJava.dot(NumJava.transpose(Wi), di_t));
@@ -86,10 +83,54 @@ public class LSTM {
         double[][] dC_prev = NumJava.times(dC_t, f_t);
 
 
-        return new double[][][] { dh_prev, dC_prev };
+        return new double[][][] {dh_prev, dC_prev, dWf, dWi, dWC, dWo, dbf, dbi, dbC, dbo};
     }
 
-    void update() {
+    public void fit(double[][][] X, double[][][] Y, int epochs) {
+        for (int epoch = 0; epoch < epochs; epoch++) {
+            double loss = 0.0;
+            double[][] h_prev = NumJava.zeros(Wf.length, 1);
+            double[][] C_prev = NumJava.zeros(WC.length, 1);
 
+            for (int t = 0; t < X.length; t++) {
+                double[][] x = X[t];
+                double[][] y_real = Y[t];
+                double[][][] fwd = forward(x, h_prev, C_prev);
+
+                double[][] f_t = fwd[0];
+                double[][] i_t = fwd[1];
+                double[][] C_tilda = fwd[2];
+                double[][] o_t = fwd[3];
+                double[][] h_t = fwd[4];
+                double[][] C_t = fwd[5];
+
+                double[][] pred = NumJava.softmax(h_t);
+
+                loss += NumJava.crossEntropyLoss(pred, y_real);
+
+                double[][] dh_next = NumJava.subtract(pred, y_real);
+                double[][] dC_next = NumJava.zeros(C_t.length, C_t[0].length);
+
+                double[][][] backProp = backward(dh_next, dC_next, C_prev, f_t, i_t, C_tilda, o_t, C_t, h_prev, x);
+
+                double[][] dh_prev = backProp[0];
+                double[][] dC_prev = backProp[1];
+                double[][] dWf = backProp[2];
+                double[][] dWi = backProp[3];
+                double[][] dWC = backProp[4];
+                double[][] dWo = backProp[5];
+                double[][] dbf = backProp[6];
+                double[][] dbi = backProp[7];
+                double[][] dbC = backProp[8];
+                double[][] dbo = backProp[9];
+
+                adam.apply(this, dWf, dWi, dWC, dWo, dbf, dbi, dbC, dbo);
+
+                h_prev = h_t;
+                C_prev = C_t;
+            }
+
+            System.out.println("# Epoch " + (epoch+1) + "/" + epochs + "\t(Loss: " + loss/X.length + ")");
+        }
     }
 }
