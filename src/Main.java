@@ -9,7 +9,7 @@ public class Main {
         double[][] h_prev = NumJava.zeros(hiddenSize, 1); // 초기 은닉 상태
         double[][] C_prev = NumJava.zeros(hiddenSize, 1); // 초기 셀 상태
 
-        // forward 호출
+        // forwardProp 호출
         double[][][] result = lstm.forward(x, h_prev, C_prev);
 
         NumJava.print(x);

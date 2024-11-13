@@ -43,6 +43,26 @@ public class NumJava {
         return arr;
     }
 
+    public static double[][] ones(int m, int n) {
+        double[][] arr = new double[m][n];
+
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++)
+                arr[i][j] = 1;
+
+        return arr;
+    }
+
+    public static double[][] ones(int m) {
+        double[][] arr = new double[m][m];
+
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < m; j++)
+                arr[i][j] = 1;
+
+        return arr;
+    }
+
     public static double sigmoid(double x) {
         return 1 / (1 + Math.exp(-x));
     }
@@ -63,6 +83,18 @@ public class NumJava {
         return sigmoid(x) * (1 - sigmoid(x));
     }
 
+    public static double[][] dsigmoid(double[][] x) {
+        int row = x.length;
+        int col = x[0].length;
+
+        double[][] array = new double[row][col];
+        for (int i = 0; i < row; i++)
+            for (int j = 0; j < col; j++)
+                array[i][j] = dsigmoid(x[i][j]);
+
+        return array;
+    }
+
     public static double tanh(double x) {
         return (Math.exp(x) - Math.exp(-x))/(Math.exp(x) + Math.exp(-x));
     }
@@ -81,6 +113,66 @@ public class NumJava {
 
     public static double dtanh(double x) {
         return 1 - tanh(x) * tanh(x);
+    }
+
+    public static double[][] dtanh(double[][] x) {
+        int row = x.length;
+        int col = x[0].length;
+
+        double[][] array = new double[row][col];
+        for (int i = 0; i < row; i++)
+            for (int j = 0; j < col; j++)
+                array[i][j] = dtanh(x[i][j]);
+
+        return array;
+    }
+
+    public static long power(long x, long n) {
+        long result = 1;
+        while (n != 0) {
+            if (n % 2 == 1)
+                result *= x;
+            x *= x;
+            n /= 2;
+        }
+
+        return result;
+    }
+
+    public static double[] softmax(double[] x) {
+        double[] arr = new double[x.length];
+        double temp = 0;
+        double sum = 0.0;
+
+        for (int i = 0; i < x.length; i++) {
+            temp = Math.exp(x[i] + 1e-12);
+            arr[i] = temp;
+            sum += temp;
+        }
+
+        for (int i = 0; i < x.length; i++)
+            arr[i] /= sum;
+
+        return arr;
+    }
+
+    public static double[][] softmax(double[][] x) {
+        double[][] arr = new double[x.length][x[0].length];
+        double temp = 0;
+        double sum = 0.0;
+
+        for (int i = 0; i < x.length; i++)
+            for (int j = 0; j < x[0].length; j++) {
+                temp = Math.exp(x[i][j] + 1e-12);
+                arr[i][j] = temp;
+                sum += temp;
+            }
+
+        for (int i = 0; i < x.length; i++)
+            for (int j = 0; j < x[0].length; j++)
+                arr[i][j] /= sum;
+
+        return arr;
     }
 
     public static double[][] randn(int m, int n) {
@@ -174,6 +266,27 @@ public class NumJava {
         return result;
     }
 
+    public static double[][] add(double[][] A, double k) {
+        double[][] arr = new double[A.length][A[0].length];
+
+        for (int i = 0; i < A.length; i++)
+            for (int j = 0; j < A[0].length; j++)
+                arr[i][j] = A[i][j] + k;
+
+        return arr;
+    }
+
+    public static double[][] subtract(double[][] A, double[][] B) {
+        if (!Arrays.equals(shape(A), shape(B))) throw new IllegalArgumentException("Two matrix must have same shape");
+        double[][] result = new double[A.length][A[0].length];
+
+        for (int i = 0; i < A.length; i++)
+            for (int j = 0; j < A[0].length; j++)
+                result[i][j] = A[i][j] - B[i][j];
+
+        return result;
+    }
+
     public static double[][] dot(double[][] A, double[][] B) {
         int[] A_shape = shape(A);
         int[] B_shape = shape(B);
@@ -202,6 +315,56 @@ public class NumJava {
         return result;
     }
 
+    public static double[][] times(double k, double[][] A) {
+        double[][] arr = new double[A.length][A[0].length];
+
+        for (int i = 0; i < A.length; i++)
+            for (int j = 0; j < A[0].length; j++)
+                arr[i][j] = A[i][j] * k;
+
+        return arr;
+    }
+
+    public static double[][] div(double[][] A, double k) {
+        double[][] arr = new double[A.length][A[0].length];
+
+        for (int i = 0; i < A.length; i++)
+            for (int j = 0; j < A[0].length; j++)
+                arr[i][j] = A[i][j] / k;
+
+        return arr;
+    }
+
+    public static double[][] div(double[][] A, double[][] B) {
+        double[][] arr = new double[A.length][A[0].length];
+
+        for (int i = 0; i < A.length; i++)
+            for (int j = 0; j < A[0].length; j++)
+                arr[i][j] = A[i][j] / B[i][j];
+
+        return arr;
+    }
+
+    public static double[][] sqrt(double[][] A) {
+        double[][] arr = new double[A.length][A[0].length];
+
+        for (int i = 0; i < A.length; i++)
+            for (int j = 0; j < A[0].length; j++)
+                arr[i][j] = Math.sqrt(A[i][j]);
+
+        return arr;
+    }
+
+    public static double[][] transpose(double[][] A) {
+        double[][] arr = new double[A[0].length][A.length];
+
+        for (int i = 0; i < A.length; i++)
+            for (int j = 0; j < A[0].length; j++)
+                arr[j][i] = A[i][j];
+
+        return arr;
+    }
+
     public static void print(double[][] A) {
         System.out.println("{ ");
         for (double[] arr : A) {
@@ -225,5 +388,14 @@ public class NumJava {
             System.out.print(i + " ");
         }
         System.out.println();
+    }
+
+    public static double crossEntropyLoss(double[][] pred, double[][] real) {
+        double loss = 0.0;
+        for (int i = 0; i < real.length; i++)
+            for (int j = 0; j < real[0].length; j++)
+                loss -= real[i][j] * Math.log(pred[i][j] + 1e-9);
+
+        return loss;
     }
 }
