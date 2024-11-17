@@ -19,7 +19,7 @@ public class LSTM {
         this.adam = new Adam(hidden, input);
     }
     
-    // 순방향 전파
+    // 순전파
     double[][][] forward(double[][] x, double[][] h_prev, double[][] C_prev) {
         double[][] concat = NumJava.vstack(h_prev, x);
 
@@ -44,7 +44,7 @@ public class LSTM {
         return new double[][][] { f_t, i_t, C_tilda, o_t, C_t, h_t };
     }
 
-    // 역방향 전파
+    // 역전파
     double[][][] backward(
             double[][] dh_next, // ∂L/∂h_t
             double[][] dC_next,
