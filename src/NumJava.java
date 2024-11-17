@@ -2,6 +2,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class NumJava {
+    // 행렬 차원
     public static int depth(Object arr) {
         int depth = 0;
         Class<?> type = arr.getClass();
@@ -12,6 +13,7 @@ public class NumJava {
         return depth;
     }
 
+    // 행렬 형태
     public static int[] shape(Object arr) {
         int d = depth(arr);
         int[] shape = new int[d];
@@ -25,6 +27,7 @@ public class NumJava {
         return shape;
     }
 
+    // mxn 영행렬
     public static double[][] zeros(int m, int n) {
         double[][] arr = new double[m][n];
         for (int i = 0; i < m; i++)
@@ -34,6 +37,7 @@ public class NumJava {
         return arr;
     }
 
+    // mxm 영행렬
     public static double[][] zeros(int m) {
         double[][] arr = new double[m][m];
         for (int i = 0; i < m; i++)
@@ -43,6 +47,7 @@ public class NumJava {
         return arr;
     }
 
+    // mxn 1행렬
     public static double[][] ones(int m, int n) {
         double[][] arr = new double[m][n];
 
@@ -53,6 +58,7 @@ public class NumJava {
         return arr;
     }
 
+    // mxm 1행렬
     public static double[][] ones(int m) {
         double[][] arr = new double[m][m];
 
@@ -63,6 +69,7 @@ public class NumJava {
         return arr;
     }
 
+    // Sigmoid function
     public static double sigmoid(double x) {
         return 1 / (1 + Math.exp(-x));
     }
@@ -79,6 +86,7 @@ public class NumJava {
         return array;
     }
 
+    // Sigmoid function derivative
     public static double dsigmoid(double x) {
         return sigmoid(x) * (1 - sigmoid(x));
     }
@@ -95,6 +103,7 @@ public class NumJava {
         return array;
     }
 
+    // Hyperbolic tangent
     public static double tanh(double x) {
         return (Math.exp(x) - Math.exp(-x))/(Math.exp(x) + Math.exp(-x));
     }
@@ -111,6 +120,7 @@ public class NumJava {
         return array;
     }
 
+    //Hyperbolic tangent derivative
     public static double dtanh(double x) {
         return 1 - tanh(x) * tanh(x);
     }
@@ -127,6 +137,7 @@ public class NumJava {
         return array;
     }
 
+    // n power of x
     public static long power(long x, long n) {
         long result = 1;
         while (n != 0) {
@@ -139,6 +150,7 @@ public class NumJava {
         return result;
     }
 
+    // Softmax Function
     public static double[] softmax(double[] x) {
         double[] arr = new double[x.length];
         double temp = 0;
@@ -175,6 +187,7 @@ public class NumJava {
         return arr;
     }
 
+    // mxn matrix with gaussian random number
     public static double[][] randn(int m, int n) {
         double[][] arr = new double[m][n];
 
@@ -196,6 +209,7 @@ public class NumJava {
         return arr;
     }
 
+    // concat two matrix vertically
     public static int[][] vstack(int[][] A, int[][] B) {
         int Arow = A.length;
         int Acol = A[0].length;
@@ -236,6 +250,7 @@ public class NumJava {
         return arr;
     }
 
+    // 행렬 덧셈
     public static double[][] add(double[][] A, double[][] B) {
         int[] A_shape = shape(A);
         int[] B_shape = shape(B);
@@ -276,6 +291,7 @@ public class NumJava {
         return arr;
     }
 
+    // 행렬 뺄셈
     public static double[][] subtract(double[][] A, double[][] B) {
         if (!Arrays.equals(shape(A), shape(B))) throw new IllegalArgumentException("Two matrix must have same shape");
         double[][] result = new double[A.length][A[0].length];
@@ -287,6 +303,7 @@ public class NumJava {
         return result;
     }
 
+    // 행렬곱
     public static double[][] dot(double[][] A, double[][] B) {
         int[] A_shape = shape(A);
         int[] B_shape = shape(B);
@@ -302,6 +319,7 @@ public class NumJava {
         return result;
     }
 
+    // Hadamard product
     public static double[][] times(double[][] A, double[][] B) {
         int[] A_shape = shape(A);
         int[] B_shape = shape(B);
@@ -325,6 +343,7 @@ public class NumJava {
         return arr;
     }
 
+    // Hadamard product 나누기 버전
     public static double[][] div(double[][] A, double k) {
         double[][] arr = new double[A.length][A[0].length];
 
@@ -345,6 +364,7 @@ public class NumJava {
         return arr;
     }
 
+    // 행렬 원소 제곱근
     public static double[][] sqrt(double[][] A) {
         double[][] arr = new double[A.length][A[0].length];
 
@@ -355,6 +375,7 @@ public class NumJava {
         return arr;
     }
 
+    // 행 또는 열 방향 합
     public static double[][] sum(double[][] A, int axis) {
         double[][] arr = new double[A.length][A[0].length];
         if (axis == 0) {
@@ -374,6 +395,7 @@ public class NumJava {
         return arr;
     }
 
+    // 전치
     public static double[][] transpose(double[][] A) {
         double[][] arr = new double[A[0].length][A.length];
 
@@ -384,6 +406,7 @@ public class NumJava {
         return arr;
     }
 
+    // 행렬 출력
     public static void print(double[][] A) {
         System.out.println("{ ");
         for (double[] arr : A) {
@@ -429,6 +452,7 @@ public class NumJava {
         System.out.println();
     }
 
+    // CrossEntropyLoss
     public static double crossEntropyLoss(double[][] pred, double[][] real) {
 //        print(shape(pred));
 //        print(shape(real));

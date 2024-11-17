@@ -1,23 +1,25 @@
 public class LSTM {
-    protected double[][] Wf, Wi, WC, Wo;
-    protected double[][] bf, bi, bC, bo;
+    protected double[][] Wf, Wi, WC, Wo; // 가중치 행렬 선언
+    protected double[][] bf, bi, bC, bo; // 편향 행렬 선언
 
-    private Adam adam;
+    private Adam adam; // Adam optimizer 선언
 
     public LSTM(int input, int hidden) {
+        // 가중치 행렬 초기화
         this.Wf = NumJava.randn(hidden, hidden + input);
         this.Wi = NumJava.randn(hidden, hidden + input);
         this.WC = NumJava.randn(hidden, hidden + input);
         this.Wo = NumJava.randn(hidden, hidden + input);
-
+        // 편향 행렬 초기화
         this.bf = NumJava.zeros(hidden, 1);
         this.bi = NumJava.zeros(hidden, 1);
         this.bC = NumJava.zeros(hidden, 1);
         this.bo = NumJava.zeros(hidden, 1);
-
+        // Adam 초기화
         this.adam = new Adam(hidden, input);
     }
-
+    
+    // 순방향 전파 
     double[][][] forward(double[][] x, double[][] h_prev, double[][] C_prev) {
         double[][] concat = NumJava.vstack(h_prev, x);
 
@@ -37,6 +39,7 @@ public class LSTM {
         return new double[][][] { f_t, i_t, C_tilda, o_t, C_t, h_t };
     }
 
+    // 역방향 전파
     double[][][] backward(
             double[][] dh_next, // ∂L/∂h_t
             double[][] dC_next,
@@ -87,7 +90,8 @@ public class LSTM {
 
         return new double[][][] {dh_prev, dC_prev, dWf, dWi, dWC, dWo, dbf, dbi, dbC, dbo};
     }
-
+    
+    // 모델 학습
     public void fit(double[][][] X, double[][][] Y, int epochs) {
         for (int epoch = 0; epoch < epochs; epoch++) {
             double loss = 0.0;

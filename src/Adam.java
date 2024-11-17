@@ -34,11 +34,9 @@ public class Adam {
     private double[][] update(double[][] param, double[][] grad, double[][] m, double[][] v) {
         t += 1;
 
-        // Update biased moment estimates
         double[][] newM = NumJava.add(NumJava.times(beta1, m), NumJava.times(1 - beta1, grad));
         double[][] newV = NumJava.add(NumJava.times(beta2, v), NumJava.times(1 - beta2, NumJava.times(grad, grad)));
 
-        // Bias correction
         double[][] mHat = NumJava.div(newM, 1 - Math.pow(beta1, t));
         double[][] vHat = NumJava.div(newV, 1 - Math.pow(beta2, t));
 
@@ -47,14 +45,13 @@ public class Adam {
 
 
     public void apply(LSTM lstm, double[][] dWf, double[][] dWi, double[][] dWC, double[][] dWo,
-                      double[][] dbf, double[][] dbi, double[][] dbC, double[][] dbo) {
-        // Update weights
+                                 double[][] dbf, double[][] dbi, double[][] dbC, double[][] dbo) {
+
         lstm.Wf = update(lstm.Wf, dWf, mWf, vWf);
         lstm.Wi = update(lstm.Wi, dWi, mWi, vWi);
         lstm.WC = update(lstm.WC, dWC, mWC, vWC);
         lstm.Wo = update(lstm.Wo, dWo, mWo, vWo);
 
-        // Update biases
         lstm.bf = update(lstm.bf, dbf, mbf, vbf);
         lstm.bi = update(lstm.bi, dbi, mbi, vbi);
         lstm.bC = update(lstm.bC, dbC, mbC, vbC);
