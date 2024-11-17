@@ -2,7 +2,7 @@ public class LSTM {
     protected double[][] Wf, Wi, WC, Wo; // 가중치 행렬 선언
     protected double[][] bf, bi, bC, bo; // 편향 행렬 선언
 
-    private Adam adam; // Adam optimizer 선언
+    private final Adam adam; // Adam optimizer 선언
 
     public LSTM(int input, int hidden) {
         // 가중치 행렬 초기화
