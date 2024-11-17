@@ -402,6 +402,26 @@ public class NumJava {
         System.out.println("}");
     }
 
+    public static void print(double[][][] A) {
+        System.out.println("{");
+        for (int i = 0; i < A.length; i++){
+            System.out.print("\t{ ");
+            for (int j = 0; j < A[0].length; j++) {
+                System.out.print("{");
+                for (double k = 0; k < A[i][j].length-1; k++) {
+                    System.out.print(k + ", ");
+                }
+                if (j == A[0].length - 1) {
+                    System.out.print(A[i][j][A[i][j].length-1] + "} }");
+                    continue;
+                }
+                System.out.print(A[i][j][A[i][j].length-1] + "}, ");
+            }
+            System.out.println();
+        }
+        System.out.println("}");
+    }
+
     public static void print(int[] A) {
         for (int i : A) {
             System.out.print(i + " ");
@@ -410,8 +430,8 @@ public class NumJava {
     }
 
     public static double crossEntropyLoss(double[][] pred, double[][] real) {
-        print(shape(pred));
-        print(shape(real));
+//        print(shape(pred));
+//        print(shape(real));
         double loss = 0.0;
         for (int i = 0; i < real.length; i++)
             for (int j = 0; j < real[0].length; j++)

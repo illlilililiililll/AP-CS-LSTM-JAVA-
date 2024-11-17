@@ -101,8 +101,8 @@ public class LSTM {
                 double[][] i_t = fwd[1];
                 double[][] C_tilda = fwd[2];
                 double[][] o_t = fwd[3];
-                double[][] h_t = fwd[4];
-                double[][] C_t = fwd[5];
+                double[][] C_t = fwd[4];
+                double[][] h_t = fwd[5];
 
                 double[][] pred = NumJava.softmax(h_t);
 
