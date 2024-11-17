@@ -32,6 +32,8 @@ public class LSTM {
 
         double[][] h_t = NumJava.times(o_t, NumJava.tanh(C_t));
 
+        h_t = NumJava.softmax(h_t);
+
         return new double[][][] { f_t, i_t, C_tilda, o_t, C_t, h_t };
     }
 
